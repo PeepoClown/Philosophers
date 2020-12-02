@@ -12,124 +12,106 @@
 
 #include "philo_one.h"
 
-int		get_curr_mcs(void)
-{
-	struct timeval tv;
-
-	gettimeofday(&tv, NULL);
-	return ((int)tv.tv_usec);
-}
-
-void	init_config_helper(t_config *config)
+static bool	init_params_helper(t_params *params)
 {
 	int		i;
 
 	i = 0;
-	while (i < config->philo_count)
-		pthread_mutex_init(&(config->forks[i++]), NULL);
+	while (i < params->philo_count)
+		if (pthread_mutex_init(&params->forks[i++], NULL))
+			return (ft_error("Can't initialize mutex"));
 	i = 0;
-	while (i < config->philo_count)
+	while (i < params->philo_count)
 	{
-		config->philos[i].index = i;
-		config->philos[i].left_fork = (i != 0) ? &(config->forks[i - 1])
-			: &(config->forks[config->philo_count - 1]);
-		config->philos[i].right_fork = &(config->forks[i]);
-		config->philos[i].time_to_die = config->time_to_die;
-		config->philos[i].time_to_eat = config->time_to_eat;
-		config->philos[i].time_to_sleep = config->time_to_sleep;
-		config->philos[i].meals_count = config->meals_count;
-		config->philos[i].meals = 0;
-		config->philos[i].start_time = config->start_time;
-		config->philos[i].last_meal_time = config->start_time;
+		params->philos[i].index = i + 1;
+		params->philos[i].left_fork = (i != 0) ? &params->forks[i - 1]
+			: &params->forks[params->philo_count - 1];
+		params->philos[i].right_fork = &params->forks[i];
+		params->philos[i].time_to_die = params->time_to_die;
+		params->philos[i].time_to_eat = params->time_to_eat;
+		params->philos[i].time_to_sleep = params->time_to_sleep;
+		params->philos[i].meal_times = params->meal_times;
+		params->philos[i].curr_meals = 0;
+		params->philos[i].start_time = params->start_time;
+		params->philos[i].last_meal_time = get_time_in_ms();
+		params->philos[i].state = LIVE;
+
+		pthread_mutex_init(&params->philos[i].state_mutex, NULL); // ???
+
 		i++;
 	}
+	return (true);
 }
 
-int		init_config(t_config *config, char **args, int args_count)
+static bool	init_params(t_params *params, char **args, int args_count)
 {
-	config->philo_count = ft_atoi(args[0]);
-	config->time_to_die = ft_atoi(args[1]);
-	config->time_to_eat = ft_atoi(args[2]);
-	config->time_to_sleep = ft_atoi(args[3]);
-	if (args_count > 4)
-		config->meals_count = ft_atoi(args[4]);
-	if (!(config->forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t)
-		* config->philo_count)))
-		return (1);
-	if (!(config->philos = (t_philo*)malloc(sizeof(t_philo)
-		* config->philo_count)))
-		return (1);
-	if (!(config->threads = (pthread_t*)malloc(sizeof(pthread_t)
-		* config->philo_count)))
-		return (1);
-	config->start_time = get_curr_mcs();
-	init_config_helper(config);
-	return (0);
+	params->philo_count = ft_atoi(args[0]);
+	params->time_to_die = ft_atoi(args[1]);
+	params->time_to_eat = ft_atoi(args[2]);
+	params->time_to_sleep = ft_atoi(args[3]);
+	params->meal_times = (args_count > 4) ? ft_atoi(args[4]) : -1;
+	if (!(params->threads = (pthread_t*)malloc(sizeof(pthread_t)
+		* params->philo_count)))
+		return (ft_error("Can't allocate memory"));
+	if (!(params->forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t)
+		* params->philo_count)))
+		return (ft_error("Can't allocate memory"));
+	if (!(params->philos = (t_philo*)malloc(sizeof(t_philo)
+		* params->philo_count)))
+		return (ft_error("Can't allocate memory"));
+	params->start_time = get_time_in_ms();
+	return (init_params_helper(params));
 }
 
-void	*work(void *data)
+static bool	create_threads(t_params *params)
 {
-	t_philo	*philo;
+	int		i;
 
-	philo = (t_philo*)data;
-	if (philo->index % 2 == 1)
-		usleep(philo->time_to_sleep * 1000);
-	while (1)//(check_meals(philo->meals))
+	i = 0;
+	while (i < params->philo_count)
 	{
-		pthread_mutex_lock(philo->left_fork);
-		printf("%d ms| %d : take left fork\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
-		pthread_mutex_lock(philo->right_fork);
-		printf("%d ms| %d : take right fork\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
-		
-		printf("%d ms| %d : start eating\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
-		philo->last_meal_time = get_curr_mcs();
-		if ((philo->last_meal_time - philo->start_time) / 1000 > philo->time_to_die)
-		{
-			printf("%d ms| %d : die(%d %d)\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index, philo->last_meal_time, philo->start_time);
-			return (NULL);
-		}
-		usleep(philo->time_to_eat * 1000);
-
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-
-		printf("%d ms| %d : start sleeping\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
-	
-		usleep(philo->time_to_sleep * 1000);
-		printf("%d ms| %d : start thinking\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
-	}
-	return (NULL);
-}
-
-int		main(int argc, char **argv)
-{
-	t_config	config;
-
-	if (!validate_args(argv + 1, argc - 1))
-		return (1);
-	if (init_config(&config, argv + 1, argc - 1))
-	{
-		write(2, "\e[1;31m", 7);
-		write(2, "Error : allocation error\n", 25);
-		return (1);
-	}
-
-
-
-	error mgr need
-	int i = 0;
-	while (i < config.philo_count)
-	{
-		pthread_create(&(config.threads[i]), NULL, work,
-			(void*)(&(config.philos[i])));
+		if (pthread_create(&params->threads[i], NULL, philo_work,
+			(void*)&params->philos[i]))
+			return (ft_error("Can't create thread"));
 		i++;
 	}
 	i = 0;
-	while (i < config.philo_count)
-		pthread_join(config.threads[i], NULL);
+	while (i < params->philo_count)
+	{
+		if (pthread_join(params->threads[i], NULL))
+			return (ft_error("Can't join with main thread"));
+		i++;
+	}
+	return (true);
+}
 
+static void	destroy_params(t_params *params)
+{
+	int		i;
 
+	if (params->threads)
+		free(params->threads);
+	i = 0;
+	if (params->forks)
+	{
+		while (i < params->philo_count)
+			pthread_mutex_destroy(&params->forks[i++]);
+		free(params->forks);
+	}
+	if (params->philos)
+		free(params->philos);
+}
 
-	// free config & destroy mutexes
+int			main(int argc, char **argv)
+{
+	t_params	params;
+
+	if (!validate_arguments(argv + 1, argc - 1))
+		return (1);
+	if (!init_params(&params, argv + 1, argc - 1))
+		return (1);
+	if (!create_threads(&params))
+		return (1);
+	destroy_params(&params);
 	return (0);
 }

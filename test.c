@@ -304,3 +304,38 @@ int		main(int argc, char **argv)
 
 	return (EXIT_SUCCESS);
 }
+
+// void	*work(void *data)
+// {
+// 	t_philo	*philo;
+
+// 	philo = (t_philo*)data;
+// 	if (philo->index % 2 == 1)
+// 		usleep(philo->time_to_sleep * 1000);
+// 	while (1)//(check_meals(philo->meals))
+// 	{
+// 		pthread_mutex_lock(philo->left_fork);
+// 		printf("%d ms| %d : take left fork\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
+// 		pthread_mutex_lock(philo->right_fork);
+// 		printf("%d ms| %d : take right fork\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
+		
+// 		printf("%d ms| %d : start eating\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
+// 		philo->last_meal_time = get_curr_mcs();
+// 		if ((philo->last_meal_time - philo->start_time) / 1000 > philo->time_to_die)
+// 		{
+// 			printf("%d ms| %d : die(%d %d)\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index, philo->last_meal_time, philo->start_time);
+// 			return (NULL);
+// 		}
+// 		usleep(philo->time_to_eat * 1000);
+
+// 		pthread_mutex_unlock(philo->right_fork);
+// 		pthread_mutex_unlock(philo->left_fork);
+
+// 		printf("%d ms| %d : start sleeping\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
+	
+// 		usleep(philo->time_to_sleep * 1000);
+// 		printf("%d ms| %d : start thinking\n", (philo->last_meal_time - philo->start_time) / 1000, philo->index);
+// 	}
+// 	return (NULL);
+// }
+
