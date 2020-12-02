@@ -35,8 +35,9 @@ static bool	init_params_helper(t_params *params)
 		params->philos[i].start_time = params->start_time;
 		params->philos[i].last_meal_time = get_time_in_ms();
 		params->philos[i].state = LIVE;
-
-		pthread_mutex_init(&params->philos[i].state_mutex, NULL); // ???
+		
+		params->philos[i].state_mutex = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+		pthread_mutex_init(params->philos[i].state_mutex, NULL); // ???
 
 		i++;
 	}
