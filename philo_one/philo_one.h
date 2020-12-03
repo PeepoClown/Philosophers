@@ -19,6 +19,8 @@
 # include <pthread.h>
 # include <sys/time.h>
 
+extern bool			g_dead;
+
 typedef enum		e_state
 {
 	LIVE = 0,
@@ -39,7 +41,7 @@ typedef struct		s_philo
 	unsigned long long	start_time;
 	unsigned long long	last_meal_time;
 	t_state				state;
-	pthread_mutex_t		*state_mutex; // ?
+	pthread_mutex_t		*output_mutex;
 }					t_philo;
 
 typedef struct		s_params
@@ -53,6 +55,7 @@ typedef struct		s_params
 	pthread_mutex_t		*forks;
 	t_philo				*philos;
 	unsigned long long	start_time;
+	pthread_mutex_t		output_mutex;
 }					t_params;
 
 bool				validate_arguments(char **args, int args_count);
@@ -63,5 +66,7 @@ void				*philo_work(void *data);
 int					ft_atoi(const char *str);
 int					ft_strlen(const char *str);
 unsigned long long	get_time_in_ms(void);
+void				print_number(unsigned long long num);
+void				print_state(t_philo *philo, const char *msg);
 
 #endif
