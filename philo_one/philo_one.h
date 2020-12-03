@@ -21,13 +21,6 @@
 
 extern bool			g_dead;
 
-typedef enum		e_state
-{
-	LIVE = 0,
-	DEAD,
-	FED
-}					t_state;
-
 typedef struct		s_philo
 {
 	int					index;
@@ -40,7 +33,6 @@ typedef struct		s_philo
 	int					curr_meals;	
 	unsigned long long	start_time;
 	unsigned long long	last_meal_time;
-	t_state				state;
 	pthread_mutex_t		*output_mutex;
 }					t_philo;
 
@@ -68,5 +60,6 @@ int					ft_strlen(const char *str);
 unsigned long long	get_time_in_ms(void);
 void				print_number(unsigned long long num);
 void				print_state(t_philo *philo, const char *msg);
+// my sleep implementation
 
 #endif

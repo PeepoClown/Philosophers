@@ -12,6 +12,8 @@
 
 #include "philo_one.h"
 
+bool		g_dead;
+
 static bool	init_params_helper(t_params *params)
 {
 	int		i;
@@ -20,8 +22,6 @@ static bool	init_params_helper(t_params *params)
 	while (i < params->philo_count)
 		if (pthread_mutex_init(&params->forks[i++], NULL))
 			return (ft_error("Can't initialize mutex"));
-	if (pthread_mutex_init(&params->output_mutex, NULL))
-		return (ft_error("Can't initialize mutex"));
 	i = 0;
 	while (i < params->philo_count)
 	{
@@ -36,7 +36,6 @@ static bool	init_params_helper(t_params *params)
 		params->philos[i].curr_meals = 0;
 		params->philos[i].start_time = params->start_time;
 		params->philos[i].last_meal_time = get_time_in_ms();
-		params->philos[i].state = LIVE;
 		params->philos[i].output_mutex = &params->output_mutex;
 		i++;
 	}
@@ -60,6 +59,8 @@ static bool	init_params(t_params *params, char **args, int args_count)
 		* params->philo_count)))
 		return (ft_error("Can't allocate memory"));
 	params->start_time = get_time_in_ms();
+	if (pthread_mutex_init(&params->output_mutex, NULL))
+		return (ft_error("Can't initialize mutex"));
 	return (init_params_helper(params));
 }
 
@@ -98,6 +99,7 @@ static void	destroy_params(t_params *params)
 			pthread_mutex_destroy(&params->forks[i++]);
 		free(params->forks);
 	}
+	pthread_mutex_destroy(&params->output_mutex);
 	if (params->philos)
 		free(params->philos);
 }
@@ -106,6 +108,7 @@ int			main(int argc, char **argv)
 {
 	t_params	params;
 
+	g_dead = false;
 	if (!validate_arguments(argv + 1, argc - 1))
 		return (1);
 	if (!init_params(&params, argv + 1, argc - 1))
