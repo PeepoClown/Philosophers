@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/04 16:28:59 by wupdegra          #+#    #+#             */
+/*   Updated: 2020/12/04 16:36:33 by wupdegra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo_one.h"
 
 int					ft_atoi(const char *str)
@@ -39,4 +51,13 @@ unsigned long long	get_time_in_ms(void)
 	res = (unsigned long long)tv.tv_sec * 1000 +
 		(unsigned long long)tv.tv_usec / 1000;
 	return (res);
+}
+
+void				ft_usleep(unsigned long long time)
+{
+	unsigned long long	start_time;
+
+	start_time = get_time_in_ms();
+	while (get_time_in_ms() - start_time < time)
+		usleep(200);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/04 16:28:54 by wupdegra          #+#    #+#             */
+/*   Updated: 2020/12/04 16:36:53 by wupdegra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo_one.h"
 
 bool	ft_error(const char *error_msg)
@@ -30,12 +42,11 @@ void	print_state(t_philo *philo, const char *msg)
 	unsigned long long	curr_time;
 
 	pthread_mutex_lock(philo->output_mutex);
-	write(1, "[", 1);
 	curr_time = get_time_in_ms() - philo->start_time;
 	print_number(curr_time);
-	write(1, " ms] ", 5);
+	write(1, " ", 1);
 	print_number(philo->index);
-	write(1, " : ", 3);
+	write(1, " ", 1);
 	write(1, msg, ft_strlen(msg));
 	write(1, "\n", 1);
 	pthread_mutex_unlock(philo->output_mutex);
