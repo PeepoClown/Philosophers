@@ -6,13 +6,11 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:49 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/04 20:12:10 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/04 20:19:39 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
-
-#include <stdio.h>
 
 void	*philo_check(void *data)
 {

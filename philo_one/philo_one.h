@@ -6,12 +6,12 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 17:29:37 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/04 17:18:01 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/04 20:19:51 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_ONE_H
-#define PHILO_ONE_H
+# define PHILO_ONE_H
 
 # include <unistd.h>
 # include <stdbool.h>
@@ -30,7 +30,7 @@ typedef struct		s_philo
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					meal_times;
-	int					curr_meals;	
+	int					curr_meals;
 	unsigned long long	start_time;
 	unsigned long long	last_meal_time;
 	pthread_mutex_t		*output_mutex;
