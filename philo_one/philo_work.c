@@ -6,11 +6,13 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:49 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/04 17:24:05 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/04 20:12:10 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
+
+#include <stdio.h>
 
 void	*philo_check(void *data)
 {
@@ -20,49 +22,43 @@ void	*philo_check(void *data)
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
 		usleep(200);
-		if (get_time_in_ms() - philo->last_meal_time >= (unsigned long long)philo->time_to_die)
+		if (g_dead)
+			return (NULL);
+		if (!g_dead && get_time_in_ms() - philo->last_meal_time >
+			(unsigned long long)philo->time_to_die)
 		{
-			if (philo->meal_times == -1)
-				g_dead = true;
-			if (g_dead)
-				print_state(philo, "died");
+			g_dead = true;
+			print_state(philo, "died");
 			return (NULL);
 		}
 	}
 	return (NULL);
 }
 
-int		philo_take_forks(t_philo *philo)
-{
-	// take left fork
-	pthread_mutex_lock(philo->left_fork);
-	if (g_dead) // check dead status after lock
-	{
-		pthread_mutex_unlock(philo->left_fork);
-		return (0);
-	}
-	print_state(philo, "has taken a fork");
-	// take right fork
-	pthread_mutex_lock(philo->right_fork);
-	if (g_dead) // check dead status after lock
-	{
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-		return (0);
-	}
-	print_state(philo, "has taken a fork");
-	return (1);
-}
-
 int		philo_eat(t_philo *philo)
 {
-	philo->last_meal_time = get_time_in_ms(); // set last meal time
+	pthread_mutex_lock(philo->left_fork);
+	if (g_dead)
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		return (0);
+	}
+	print_state(philo, "has taken a fork");
+	pthread_mutex_lock(philo->right_fork);
+	if (g_dead)
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+		return (0);
+	}
+	print_state(philo, "has taken a fork");
+	philo->last_meal_time = get_time_in_ms();
 	print_state(philo, "is eating");
 	philo->curr_meals++;
-	ft_usleep(philo->time_to_eat); // time to eat
-	pthread_mutex_unlock(philo->right_fork);
+	ft_usleep(philo->time_to_eat);
 	pthread_mutex_unlock(philo->left_fork);
-	if (g_dead) // check dead status after usleep
+	pthread_mutex_unlock(philo->right_fork);
+	if (g_dead)
 		return (0);
 	return (1);
 }
@@ -73,20 +69,18 @@ void	*philo_work(void *data)
 	pthread_t	checker;
 
 	philo = (t_philo*)data;
-	philo->last_meal_time = get_time_in_ms(); // set curr time
-	pthread_create(&checker, NULL, philo_check, data); // thread checker
-	if (philo->index % 2 == 0) // give forks through one
-		ft_usleep(philo->time_to_sleep);
-	while (!g_dead && (philo->curr_meals != philo->meal_times)) // if 5-th param not set, it value = -1
+	if (pthread_create(&checker, NULL, philo_check, data))
+		return ((void*)ft_error("Can't create thread"));
+	if (philo->index % 2 == 0)
+		usleep(200);
+	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
-		if (get_time_in_ms() - philo->start_time != 0) // think
+		if (philo->curr_meals != 0)
 			print_state(philo, "is thinking");
-		if (!philo_take_forks(philo)) // take forks
-			break ;
-		if (!philo_eat(philo)) // eat
-			break ;
-		print_state(philo, "is sleeping"); // sleep
-		ft_usleep(philo->time_to_sleep); // time to sleep
+		if (!philo_eat(philo))
+			return (NULL);
+		print_state(philo, "is sleeping");
+		ft_usleep(philo->time_to_sleep);
 	}
 	return (NULL);
 }
