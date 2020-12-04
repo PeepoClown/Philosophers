@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:49 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/04 17:14:43 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/04 17:24:05 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*philo_check(void *data)
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
 		usleep(200);
-		if (get_time_in_ms() - philo->last_meal_time > (unsigned long long)philo->time_to_die)
+		if (get_time_in_ms() - philo->last_meal_time >= (unsigned long long)philo->time_to_die)
 		{
 			if (philo->meal_times == -1)
 				g_dead = true;

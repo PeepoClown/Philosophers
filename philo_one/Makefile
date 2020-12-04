@@ -17,7 +17,6 @@ OBJ = $(SRC:.c=.o)
 .PHONY : all
 all : $(NAME)
 
-.PHONY : $(NAME)
 $(NAME) : $(OBJ)
 	gcc $(CFLAGS) $(INCLUDE) $(OBJ) -o $(NAME)
 
