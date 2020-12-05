@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 17:29:37 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/05 16:35:40 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/05 16:54:41 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <semaphore.h>
-# include <sys/types.h>
 
 extern bool			g_dead;
 
