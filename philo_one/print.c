@@ -6,13 +6,13 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:54 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/04 16:36:53 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/05 14:18:55 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-bool	ft_error(const char *error_msg)
+bool		ft_error(const char *error_msg)
 {
 	write(2, "\e[1;31m", 7);
 	write(2, "Error : ", 8);
@@ -21,7 +21,7 @@ bool	ft_error(const char *error_msg)
 	return (false);
 }
 
-void	print_number(unsigned long long num)
+static void	print_number(unsigned long long num)
 {
 	char	curr;
 
@@ -37,7 +37,7 @@ void	print_number(unsigned long long num)
 	}
 }
 
-void	print_state(t_philo *philo, const char *msg)
+void		print_state(t_philo *philo, const char *msg)
 {
 	unsigned long long	curr_time;
 

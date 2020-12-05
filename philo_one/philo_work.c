@@ -6,13 +6,13 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:49 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/04 20:19:39 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/05 14:19:12 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-void	*philo_check(void *data)
+static void	*philo_check(void *data)
 {
 	t_philo	*philo;
 
@@ -33,7 +33,7 @@ void	*philo_check(void *data)
 	return (NULL);
 }
 
-int		philo_eat(t_philo *philo)
+static int	philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork);
 	if (g_dead)
@@ -61,7 +61,7 @@ int		philo_eat(t_philo *philo)
 	return (1);
 }
 
-void	*philo_work(void *data)
+void		*philo_work(void *data)
 {
 	t_philo		*philo;
 	pthread_t	checker;
