@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:54 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/05 14:18:55 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/05 14:50:43 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,33 +21,64 @@ bool		ft_error(const char *error_msg)
 	return (false);
 }
 
-static void	print_number(unsigned long long num)
+static	int	ft_get_size(int n)
 {
-	char	curr;
+	int size;
 
-	if (num < 10)
+	size = 0;
+	if (n == 0)
+		return (1);
+	while (n > 0)
 	{
-		curr = num + 48;
-		write(1, &curr, 1);
+		n /= 10;
+		size++;
 	}
-	else
+	return (size);
+}
+
+static char	*ft_itoa(int n)
+{
+	char			*str;
+	size_t			len;
+	size_t			sign;
+
+	sign = 0;
+	if (n < 0)
 	{
-		print_number(num / 10);
-		print_number(num % 10);
+		n *= -1;
+		sign = 1;
 	}
+	len = sign + ft_get_size(n);
+	if (!(str = (char*)malloc(sizeof(char) * (len + 1))))
+		return (NULL);
+	str[len] = '\0';
+	while (len-- > sign)
+	{
+		str[len] = n % 10 + 48;
+		n /= 10;
+	}
+	if (sign)
+		str[len] = '-';
+	return (str);
 }
 
 void		print_state(t_philo *philo, const char *msg)
 {
 	unsigned long long	curr_time;
+	char				*buff;
 
-	pthread_mutex_lock(philo->output_mutex);
 	curr_time = get_time_in_ms() - philo->start_time;
-	print_number(curr_time);
-	write(1, " ", 1);
-	print_number(philo->index);
-	write(1, " ", 1);
-	write(1, msg, ft_strlen(msg));
-	write(1, "\n", 1);
-	pthread_mutex_unlock(philo->output_mutex);
+	buff = (char*)malloc(sizeof(char) * (ft_strlen(ft_itoa(curr_time)) +
+		ft_strlen(ft_itoa(philo->index)) + ft_strlen(msg) + 4));
+	ft_strcpy(buff, ft_itoa(curr_time));
+	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)), " ");
+	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1, ft_itoa(philo->index));
+	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1 +
+		ft_strlen(ft_itoa(philo->index)), " ");
+	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1 +
+		ft_strlen(ft_itoa(philo->index)) + 1, (char*)msg);
+	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1 +
+		ft_strlen(ft_itoa(philo->index)) + 1 + ft_strlen(msg), "\n\0");
+	write(1, buff, ft_strlen(buff));
+	free(buff);
 }

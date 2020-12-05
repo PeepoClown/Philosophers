@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:59 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/04 16:36:33 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/05 14:42:09 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,18 @@ void				ft_usleep(unsigned long long time)
 	start_time = get_time_in_ms();
 	while (get_time_in_ms() - start_time < time)
 		usleep(200);
+}
+
+char				*ft_strcpy(char *dest, char *src)
+{
+	int i;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
