@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 16:52:10 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/06 17:12:26 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/06 18:19:34 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct		s_params
 	sem_t				*status_sem;
 }					t_params;
 
-void				*philo_work(void *data);
+void				philo_work(void *data);
 bool				validate_arguments(char **args, int args_count);
 bool				ft_error(const char *error_msg);
 void				print_state(t_philo *philo, const char *msg);

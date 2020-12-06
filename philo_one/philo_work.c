@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:49 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/05 14:19:12 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/06 18:29:58 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,7 @@ void		*philo_work(void *data)
 		usleep(200);
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
-		if (philo->curr_meals != 0)
-			print_state(philo, "is thinking");
+		print_state(philo, "is thinking");
 		if (!philo_eat(philo))
 			return (NULL);
 		print_state(philo, "is sleeping");

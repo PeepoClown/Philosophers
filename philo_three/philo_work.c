@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 16:51:29 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/06 17:39:39 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/06 18:28:37 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,22 @@ static void	philo_eat(t_philo *philo)
 	sem_post(philo->forks);
 }
 
-void		*philo_work(void *data)
+void		philo_work(void *data)
 {
 	t_philo		*philo;
 	pthread_t	checker;
 
 	philo = (t_philo*)data;
 	if (pthread_create(&checker, NULL, philo_check, data))
-		return ((void*)ft_error("Can't create thread"));
+	{
+		ft_error("Can't create thread");
+		return ;
+	}
 	if (philo->index % 2 == 0)
 		usleep(200);
 	while (philo->curr_meals != philo->meal_times)
 	{
-		if (philo->curr_meals != 0)
-			print_state(philo, "is thinking");
+		print_state(philo, "is thinking");
 		philo_eat(philo);
 		print_state(philo, "is sleeping");
 		ft_usleep(philo->time_to_sleep);
