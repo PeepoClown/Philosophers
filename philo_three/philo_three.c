@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 16:53:03 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/06 17:02:22 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/06 17:14:11 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ static bool	init_params_helper(t_params *params)
 		params->philos[i].curr_meals = 0;
 		params->philos[i].start_time = params->start_time;
 		params->philos[i].last_meal_time = get_time_in_ms();
-		
-		params->philos[i].sem = params->sem;
-		
+		params->philos[i].status_sem= params->status_sem;
 		i++;
 	}
 	return (true);
@@ -54,8 +52,10 @@ static bool	init_params(t_params *params, char **args, int args_count)
 		* params->philo_count)))
 		return (ft_error("Can't allocate memory"));
 	params->start_time = get_time_in_ms();
-	sem_unlink("/test");
-	params->sem = sem_open("/test", O_CREAT, 0644, 1);
+	sem_unlink("/status_sem");
+	if ((params->status_sem = sem_open("/status_sem", O_CREAT, 0644, 1)) ==
+		SEM_FAILED)
+		return (ft_error("Can't create semaphore"));
 	return (init_params_helper(params));
 }
 
@@ -114,6 +114,7 @@ int			main(int argc, char **argv)
 		sem_close(params.forks);
 	if (params.philos)
 		free(params.philos);
-	sem_close(params.sem);
+	if (params.status_sem)
+		sem_close(params.status_sem);
 	return (0);
 }

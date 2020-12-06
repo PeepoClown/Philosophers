@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 16:51:29 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/06 17:02:04 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/06 17:39:39 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	*philo_check(void *data)
 	philo = (t_philo*)data;
 	while (philo->curr_meals != philo->meal_times)
 	{
-		sem_wait(philo->sem);
+		sem_wait(philo->status_sem);
 		usleep(200);
 		if (get_time_in_ms() - philo->last_meal_time >
 			(unsigned long long)philo->time_to_die)
@@ -27,7 +27,7 @@ static void	*philo_check(void *data)
 			print_state(philo, "died");
 			exit(1);
 		}
-		sem_post(philo->sem);
+		sem_post(philo->status_sem);
 	}
 	return (NULL);
 }
