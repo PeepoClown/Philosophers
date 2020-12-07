@@ -18,7 +18,7 @@ OBJ = $(SRC:.c=.o)
 all : $(NAME)
 
 $(NAME) : $(OBJ)
-	gcc $(CFLAGS) $(INCLUDE) $(OBJ) -o $(NAME)
+	gcc $(CFLAGS) $(INCLUDE) $(LINK) $(OBJ) -o $(NAME)
 
 %.o : %.c $(HEADER)
 	gcc $(CFLAGS) $(INCLUDE) -c $< -o $@
