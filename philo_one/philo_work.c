@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:49 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/06 18:29:58 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/08 20:18:06 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static void	*philo_check(void *data)
 	philo = (t_philo*)data;
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
-		usleep(200);
+		pthread_mutex_lock(philo->status_mutex);
+		ft_usleep(1);
 		if (g_dead)
 			return (NULL);
 		if (!g_dead && get_time_in_ms() - philo->last_meal_time >
@@ -27,8 +28,10 @@ static void	*philo_check(void *data)
 		{
 			g_dead = true;
 			print_state(philo, "died");
+			pthread_mutex_unlock(philo->status_mutex);
 			return (NULL);
 		}
+		pthread_mutex_unlock(philo->status_mutex);
 	}
 	return (NULL);
 }
@@ -70,7 +73,8 @@ void		*philo_work(void *data)
 	if (pthread_create(&checker, NULL, philo_check, data))
 		return ((void*)ft_error("Can't create thread"));
 	if (philo->index % 2 == 0)
-		usleep(200);
+		ft_usleep(10);
+	philo->last_meal_time = get_time_in_ms();
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
 		print_state(philo, "is thinking");

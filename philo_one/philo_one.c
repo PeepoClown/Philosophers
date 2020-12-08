@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 17:58:01 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/05 14:45:26 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/08 19:40:53 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static bool	init_params_helper(t_params *params)
 		params->philos[i].curr_meals = 0;
 		params->philos[i].start_time = params->start_time;
 		params->philos[i].last_meal_time = get_time_in_ms();
+		params->philos[i].output_mutex = &params->output_mutex;
+		params->philos[i].status_mutex = &params->status_mutex;
 		i++;
 	}
 	return (true);
@@ -58,6 +60,10 @@ static bool	init_params(t_params *params, char **args, int args_count)
 		* params->philo_count)))
 		return (ft_error("Can't allocate memory"));
 	params->start_time = get_time_in_ms();
+	if (pthread_mutex_init(&params->output_mutex, NULL))
+		return (ft_error("Can't initialize mutex"));
+	if (pthread_mutex_init(&params->status_mutex, NULL))
+		return (ft_error("Can't initialize mutex"));
 	return (init_params_helper(params));
 }
 
@@ -96,6 +102,8 @@ static void	destroy_params(t_params *params)
 			pthread_mutex_destroy(&params->forks[i++]);
 		free(params->forks);
 	}
+	pthread_mutex_destroy(&params->output_mutex);
+	pthread_mutex_destroy(&params->status_mutex);
 	if (params->philos)
 		free(params->philos);
 }

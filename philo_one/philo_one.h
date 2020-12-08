@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 17:29:37 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/05 14:44:59 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/08 17:47:18 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ typedef struct		s_philo
 	int					curr_meals;
 	unsigned long long	start_time;
 	unsigned long long	last_meal_time;
+	pthread_mutex_t		*output_mutex;
+	pthread_mutex_t		*status_mutex;
 }					t_philo;
 
 typedef struct		s_params
@@ -46,6 +48,8 @@ typedef struct		s_params
 	pthread_mutex_t		*forks;
 	t_philo				*philos;
 	unsigned long long	start_time;
+	pthread_mutex_t		output_mutex;
+	pthread_mutex_t		status_mutex;
 }					t_params;
 
 void				*philo_work(void *data);

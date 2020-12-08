@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 15:21:58 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/05 16:36:34 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/08 15:48:08 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,23 @@ void		print_state(t_philo *philo, const char *msg)
 {
 	unsigned long long	curr_time;
 	char				*buff;
+	char				*tmp1;
+	char				*tmp2;
 
 	curr_time = get_time_in_ms() - philo->start_time;
-	buff = (char*)malloc(sizeof(char) * (ft_strlen(ft_itoa(curr_time)) +
-		ft_strlen(ft_itoa(philo->index)) + ft_strlen(msg) + 4));
-	ft_strcpy(buff, ft_itoa(curr_time));
-	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)), " ");
-	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1, ft_itoa(philo->index));
-	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1 +
-		ft_strlen(ft_itoa(philo->index)), " ");
-	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1 +
-		ft_strlen(ft_itoa(philo->index)) + 1, (char*)msg);
-	ft_strcpy(buff + ft_strlen(ft_itoa(curr_time)) + 1 +
-		ft_strlen(ft_itoa(philo->index)) + 1 + ft_strlen(msg), "\n\0");
+	tmp1 = ft_itoa(curr_time);
+	tmp2 = ft_itoa(philo->index);
+	buff = (char*)malloc(sizeof(char) * (ft_strlen(tmp1) +
+		ft_strlen(tmp2) + ft_strlen(msg) + 4));
+	ft_strcpy(buff, tmp1);
+	ft_strcpy(buff + ft_strlen(tmp1), " ");
+	ft_strcpy(buff + ft_strlen(tmp1) + 1, tmp2);
+	ft_strcpy(buff + ft_strlen(tmp1) + 1 + ft_strlen(tmp2), " ");
+	ft_strcpy(buff + ft_strlen(tmp1) + 1 + ft_strlen(tmp2) + 1, (char*)msg);
+	ft_strcpy(buff + ft_strlen(tmp1) + 1 +
+		ft_strlen(tmp2) + 1 + ft_strlen(msg), "\n\0");
 	write(1, buff, ft_strlen(buff));
 	free(buff);
+	free(tmp1);
+	free(tmp2);
 }

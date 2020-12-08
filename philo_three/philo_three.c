@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 16:53:03 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/06 17:14:11 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/08 15:00:42 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static bool	init_params_helper(t_params *params)
 		params->philos[i].curr_meals = 0;
 		params->philos[i].start_time = params->start_time;
 		params->philos[i].last_meal_time = get_time_in_ms();
-		params->philos[i].status_sem= params->status_sem;
+		params->philos[i].status_sem = params->status_sem;
 		i++;
 	}
 	return (true);

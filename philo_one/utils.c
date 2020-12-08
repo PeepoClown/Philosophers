@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 16:28:59 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/05 14:42:09 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/08 20:16:29 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,21 @@ unsigned long long	get_time_in_ms(void)
 void				ft_usleep(unsigned long long time)
 {
 	unsigned long long	start_time;
+	struct timeval		tv;
+	unsigned long long	curr_time;
 
-	start_time = get_time_in_ms();
-	while (get_time_in_ms() - start_time < time)
+	gettimeofday(&tv, NULL);
+	start_time = (unsigned long long)tv.tv_sec * 1000 * 1000 +
+		(unsigned long long)tv.tv_usec;
+	curr_time = start_time;
+	time *= 1000;
+	while (curr_time - start_time < time)
+	{
+		gettimeofday(&tv, NULL);
 		usleep(200);
+		curr_time = (unsigned long long)tv.tv_sec * 1000 * 1000 +
+		(unsigned long long)tv.tv_usec;
+	}
 }
 
 char				*ft_strcpy(char *dest, char *src)
