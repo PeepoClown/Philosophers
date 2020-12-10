@@ -20,7 +20,7 @@ static void	*philo_check(void *data)
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
 		usleep(200);
-		pthread_mutex_lock(philo->status_mutex);	
+		pthread_mutex_lock(philo->status_mutex);
 		if (g_dead)
 			return (NULL);
 		if (!g_dead && get_time_in_ms() - philo->last_meal_time >
