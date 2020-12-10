@@ -12,6 +12,8 @@
 
 #include "philo_three.h"
 
+bool		g_dead;
+
 static bool	init_params_helper(t_params *params)
 {
 	int		i;
@@ -28,6 +30,7 @@ static bool	init_params_helper(t_params *params)
 		params->philos[i].curr_meals = 0;
 		params->philos[i].start_time = params->start_time;
 		params->philos[i].last_meal_time = get_time_in_ms();
+		params->philos[i].output_sem = params->output_sem;
 		params->philos[i].status_sem = params->status_sem;
 		i++;
 	}
@@ -52,9 +55,13 @@ static bool	init_params(t_params *params, char **args, int args_count)
 		* params->philo_count)))
 		return (ft_error("Can't allocate memory"));
 	params->start_time = get_time_in_ms();
-	sem_unlink("/status_sem");
-	if ((params->status_sem = sem_open("/status_sem", O_CREAT, 0644, 1)) ==
-		SEM_FAILED)
+	sem_unlink("/output");
+	if ((params->output_sem = sem_open("/output", O_CREAT, 0644,
+		1)) == SEM_FAILED)
+		return (ft_error("Can't create semaphore"));
+	sem_unlink("/status");
+	if ((params->status_sem = sem_open("/status", O_CREAT, 0644,
+		1)) == SEM_FAILED)
 		return (ft_error("Can't create semaphore"));
 	return (init_params_helper(params));
 }
@@ -102,6 +109,7 @@ int			main(int argc, char **argv)
 {
 	t_params	params;
 
+	g_dead = false;
 	if (!validate_arguments(argv + 1, argc - 1))
 		return (1);
 	if (!init_params(&params, argv + 1, argc - 1))
@@ -114,6 +122,8 @@ int			main(int argc, char **argv)
 		sem_close(params.forks);
 	if (params.philos)
 		free(params.philos);
+	sem_close(params.output_sem);
+	sem_close(params.status_sem);
 	if (params.status_sem)
 		sem_close(params.status_sem);
 	return (0);

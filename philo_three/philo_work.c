@@ -17,13 +17,16 @@ static void	*philo_check(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo*)data;
-	while (philo->curr_meals != philo->meal_times)
+	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
-		sem_wait(philo->status_sem);
 		usleep(200);
-		if (get_time_in_ms() - philo->last_meal_time >
+		sem_wait(philo->status_sem);
+		if (g_dead)
+			exit(1);
+		if (!g_dead && get_time_in_ms() - philo->last_meal_time >
 			(unsigned long long)philo->time_to_die)
 		{
+			g_dead = true;
 			print_state(philo, "died");
 			exit(1);
 		}
@@ -35,8 +38,19 @@ static void	*philo_check(void *data)
 static void	philo_eat(t_philo *philo)
 {
 	sem_wait(philo->forks);
+	if (g_dead)
+	{
+		sem_post(philo->forks);
+		exit(1);
+	}
 	print_state(philo, "has taken a fork");
 	sem_wait(philo->forks);
+	if (g_dead)
+	{
+		sem_post(philo->forks);
+		sem_post(philo->forks);
+		exit(1);
+	}
 	print_state(philo, "has taken a fork");
 	philo->last_meal_time = get_time_in_ms();
 	print_state(philo, "is eating");
@@ -44,6 +58,8 @@ static void	philo_eat(t_philo *philo)
 	ft_usleep(philo->time_to_eat);
 	sem_post(philo->forks);
 	sem_post(philo->forks);
+	if (g_dead)
+		exit(1);
 }
 
 void		philo_work(void *data)
@@ -58,7 +74,8 @@ void		philo_work(void *data)
 		return ;
 	}
 	if (philo->index % 2 == 0)
-		usleep(200);
+		ft_usleep(50);
+	philo->last_meal_time = get_time_in_ms();
 	while (philo->curr_meals != philo->meal_times)
 	{
 		print_state(philo, "is thinking");

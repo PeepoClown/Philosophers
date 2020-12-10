@@ -1,6 +1,6 @@
 NAME = philo_one
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -O2
+CFLAGS = -Wall -Wextra -Werror
 
 HEADERS = philo_one.h
 HEADER_DIR = ./

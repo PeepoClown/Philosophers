@@ -82,10 +82,10 @@ void		print_state(t_philo *philo, const char *msg)
 	ft_strcpy(buff + ft_strlen(tmp1) + 1 + ft_strlen(tmp2) + 1, (char*)msg);
 	ft_strcpy(buff + ft_strlen(tmp1) + 1 +
 		ft_strlen(tmp2) + 1 + ft_strlen(msg), "\n\0");
-	write(1, buff, ft_strlen(buff));
+	if (!g_dead || msg[0] == 'd')
+		write(1, buff, ft_strlen(buff));
 	free(buff);
 	free(tmp1);
 	free(tmp2);
-	if (msg[0] != 'd')
-		pthread_mutex_unlock(philo->output_mutex);
+	pthread_mutex_unlock(philo->output_mutex);
 }

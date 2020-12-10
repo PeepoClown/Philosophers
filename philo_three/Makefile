@@ -1,6 +1,6 @@
 NAME = philo_three
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -O2
+CFLAGS = -Wall -Wextra -Werror
 
 HEADERS = philo_three.h
 HEADER_DIR = ./

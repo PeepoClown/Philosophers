@@ -19,6 +19,7 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <semaphore.h>
+# include <fcntl.h>
 
 extern bool			g_dead;
 
@@ -33,6 +34,8 @@ typedef struct		s_philo
 	int					curr_meals;
 	unsigned long long	start_time;
 	unsigned long long	last_meal_time;
+	sem_t				*output_sem;
+	sem_t				*status_sem;
 }					t_philo;
 
 typedef struct		s_params
@@ -46,6 +49,8 @@ typedef struct		s_params
 	sem_t				*forks;
 	t_philo				*philos;
 	unsigned long long	start_time;
+	sem_t				*output_sem;
+	sem_t				*status_sem;
 }					t_params;
 
 void				*philo_work(void *data);

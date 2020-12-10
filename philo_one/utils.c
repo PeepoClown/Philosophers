@@ -56,21 +56,10 @@ unsigned long long	get_time_in_ms(void)
 void				ft_usleep(unsigned long long time)
 {
 	unsigned long long	start_time;
-	struct timeval		tv;
-	unsigned long long	curr_time;
 
-	gettimeofday(&tv, NULL);
-	start_time = (unsigned long long)tv.tv_sec * 1000 * 1000 +
-		(unsigned long long)tv.tv_usec;
-	curr_time = start_time;
-	time *= 1000;
-	while (curr_time - start_time < time)
-	{
-		gettimeofday(&tv, NULL);
+	start_time = get_time_in_ms();
+	while (get_time_in_ms() - start_time < time)
 		usleep(200);
-		curr_time = (unsigned long long)tv.tv_sec * 1000 * 1000 +
-		(unsigned long long)tv.tv_usec;
-	}
 }
 
 char				*ft_strcpy(char *dest, char *src)

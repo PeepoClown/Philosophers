@@ -20,6 +20,7 @@ static void	*philo_check(void *data)
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
 		usleep(200);
+		sem_wait(philo->status_sem);
 		if (g_dead)
 			return (NULL);
 		if (!g_dead && get_time_in_ms() - philo->last_meal_time >
@@ -27,8 +28,10 @@ static void	*philo_check(void *data)
 		{
 			g_dead = true;
 			print_state(philo, "died");
+			// sem_post(philo->status_sem); ???
 			return (NULL);
 		}
+		sem_post(philo->status_sem);
 	}
 	return (NULL);
 }
@@ -70,7 +73,8 @@ void		*philo_work(void *data)
 	if (pthread_create(&checker, NULL, philo_check, data))
 		return ((void*)ft_error("Can't create thread"));
 	if (philo->index % 2 == 0)
-		usleep(200);
+		ft_usleep(50);
+	philo->last_meal_time = get_time_in_ms();
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
 		print_state(philo, "is thinking");

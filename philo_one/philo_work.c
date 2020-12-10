@@ -19,8 +19,8 @@ static void	*philo_check(void *data)
 	philo = (t_philo*)data;
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{
-		pthread_mutex_lock(philo->status_mutex);
-		ft_usleep(1);
+		usleep(200);
+		pthread_mutex_lock(philo->status_mutex);	
 		if (g_dead)
 			return (NULL);
 		if (!g_dead && get_time_in_ms() - philo->last_meal_time >
@@ -28,7 +28,7 @@ static void	*philo_check(void *data)
 		{
 			g_dead = true;
 			print_state(philo, "died");
-			pthread_mutex_unlock(philo->status_mutex);
+			// pthread_mutex_unlock(philo->status_mutex); ???
 			return (NULL);
 		}
 		pthread_mutex_unlock(philo->status_mutex);
@@ -73,7 +73,7 @@ void		*philo_work(void *data)
 	if (pthread_create(&checker, NULL, philo_check, data))
 		return ((void*)ft_error("Can't create thread"));
 	if (philo->index % 2 == 0)
-		ft_usleep(10);
+		ft_usleep(50);
 	philo->last_meal_time = get_time_in_ms();
 	while (!g_dead && (philo->curr_meals != philo->meal_times))
 	{

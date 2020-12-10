@@ -70,6 +70,7 @@ void		print_state(t_philo *philo, const char *msg)
 	char				*tmp1;
 	char				*tmp2;
 
+	sem_wait(philo->output_sem);
 	curr_time = get_time_in_ms() - philo->start_time;
 	tmp1 = ft_itoa(curr_time);
 	tmp2 = ft_itoa(philo->index);
@@ -82,8 +83,11 @@ void		print_state(t_philo *philo, const char *msg)
 	ft_strcpy(buff + ft_strlen(tmp1) + 1 + ft_strlen(tmp2) + 1, (char*)msg);
 	ft_strcpy(buff + ft_strlen(tmp1) + 1 +
 		ft_strlen(tmp2) + 1 + ft_strlen(msg), "\n\0");
-	write(1, buff, ft_strlen(buff));
+	if (!g_dead || msg[0] == 'd')
+		write(1, buff, ft_strlen(buff));
 	free(buff);
 	free(tmp1);
 	free(tmp2);
+	if (msg[0] != 'd')
+		sem_post(philo->output_sem);
 }
