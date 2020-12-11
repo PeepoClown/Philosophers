@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 17:29:37 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/06 17:54:00 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/11 16:10:53 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct		s_philo
 	unsigned long long	start_time;
 	unsigned long long	last_meal_time;
 	sem_t				*output_sem;
-	sem_t				*status_sem;
 }					t_philo;
 
 typedef struct		s_params
@@ -50,7 +49,6 @@ typedef struct		s_params
 	t_philo				*philos;
 	unsigned long long	start_time;
 	sem_t				*output_sem;
-	sem_t				*status_sem;
 }					t_params;
 
 void				*philo_work(void *data);

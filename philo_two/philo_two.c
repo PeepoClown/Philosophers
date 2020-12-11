@@ -6,7 +6,7 @@
 /*   By: wupdegra <wupdegra@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 15:28:11 by wupdegra          #+#    #+#             */
-/*   Updated: 2020/12/08 15:23:51 by wupdegra         ###   ########.fr       */
+/*   Updated: 2020/12/11 16:11:02 by wupdegra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static bool	init_params_helper(t_params *params)
 		params->philos[i].start_time = params->start_time;
 		params->philos[i].last_meal_time = get_time_in_ms();
 		params->philos[i].output_sem = params->output_sem;
-		params->philos[i].status_sem = params->status_sem;
 		i++;
 	}
 	return (true);
@@ -57,10 +56,6 @@ static bool	init_params(t_params *params, char **args, int args_count)
 	params->start_time = get_time_in_ms();
 	sem_unlink("/output");
 	if ((params->output_sem = sem_open("/output", O_CREAT, 0644,
-		1)) == SEM_FAILED)
-		return (ft_error("Can't create semaphore"));
-	sem_unlink("/status");
-	if ((params->status_sem = sem_open("/status", O_CREAT, 0644,
 		1)) == SEM_FAILED)
 		return (ft_error("Can't create semaphore"));
 	return (init_params_helper(params));
@@ -95,7 +90,6 @@ static void	destroy_params(t_params *params)
 	if (params->forks)
 		sem_close(params->forks);
 	sem_close(params->output_sem);
-	sem_close(params->status_sem);
 	if (params->philos)
 		free(params->philos);
 }
