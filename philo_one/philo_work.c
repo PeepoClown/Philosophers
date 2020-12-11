@@ -28,7 +28,6 @@ static void	*philo_check(void *data)
 		{
 			g_dead = true;
 			print_state(philo, "died");
-			// pthread_mutex_unlock(philo->status_mutex); ???
 			return (NULL);
 		}
 		pthread_mutex_unlock(philo->status_mutex);

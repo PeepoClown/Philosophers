@@ -28,7 +28,6 @@ static void	*philo_check(void *data)
 		{
 			g_dead = true;
 			print_state(philo, "died");
-			// sem_post(philo->status_sem); ???
 			return (NULL);
 		}
 		sem_post(philo->status_sem);
